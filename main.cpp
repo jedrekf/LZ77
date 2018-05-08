@@ -14,12 +14,13 @@ int main(int argc, char* argv[]){
 	encoded.push_back(Triple{0,0,'b'});
 	encoded.push_back(Triple{2,2,'c'});
 	
-	std::cout << "Encoded string is: aab" << '\n';
+	std::cout << "Encoded string is: ababc" << '\n';
 
 	auto decompressed_str = decompress(encoded);
 
 	std::cout << "Decoded string is: " <<  decompressed_str << '\n';
 	auto result = get_compressed_data("aabbcabbcdddc");
+	std::cout << 'Encoding string : "aabbcabbcdddc"'<<std::endl;
 	for(int i=0; i<result.size(); i++)
 		std::cout << result[i].P << ' ' << result[i].C << ' ' << result[i].S << std::endl;
 	return 0;	
