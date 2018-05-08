@@ -23,8 +23,10 @@ int main(int argc, char* argv[]){
 	auto decompressed_str = decompress(encoded);
 
 	std::cout << "Decoded string is: " <<  decompressed_str << '\n';
-
-	return 0;
+	auto result = get_compressed_data("aabbcabbcdddc");
+	for(int i=0; i<result.size(); i++)
+		std::cout << result[i].P << ' ' << result[i].C << ' ' << result[i].S << std::endl;
+	return 0;	
 }
 
 void print_usage(char* argv[]){

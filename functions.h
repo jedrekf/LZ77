@@ -18,3 +18,6 @@ std::string load_from_file(std::string path);
 //decompresses to string from a vector of Triples
 std::string decompress(std::vector<Triple> coded);
 
+std::vector<Triple> get_compressed_data(std::string input);
+
+void compress_input(std::string input, std::string path);
