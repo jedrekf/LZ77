@@ -1,8 +1,11 @@
 #include "functions.h"
 #include <iostream>
 
+Window WINDOW_PARAMS = {4096, 2048, 2048};
 
 int main(int argc, char* argv[]){
+	
+	
 	// uncomment below 3 lines to use arguments
 	// auto args = get_args(argc, argv);
 	// std::string str = load_from_file(std::get<0>(args));
