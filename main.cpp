@@ -4,8 +4,6 @@
 Window WINDOW_PARAMS = {4096, 2048, 2048};
 
 int main(int argc, char* argv[]){
-	
-	
 	// uncomment below 3 lines to use arguments
 	// auto args = get_args(argc, argv);
 	// std::string str = load_from_file(std::get<0>(args));
@@ -13,12 +11,10 @@ int main(int argc, char* argv[]){
 
 	std::vector<Triple> encoded;
 	encoded.push_back(Triple{0,0,'a'});
-	encoded.push_back(Triple{0,2,'b'});
-	encoded.push_back(Triple{3,1,'c'});
-	encoded.push_back(Triple{0,3,'c'});
-	encoded.push_back(Triple{0,0,'d'});
-	encoded.push_back(Triple{3,2,'c'});
-	std::cout << "Encoded string is: aabbcabbcdddc" << '\n';
+	encoded.push_back(Triple{0,0,'b'});
+	encoded.push_back(Triple{2,2,'c'});
+	
+	std::cout << "Encoded string is: aab" << '\n';
 
 	auto decompressed_str = decompress(encoded);
 
