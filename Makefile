@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall
 
-OBJECTS = main.o file_loader.o
+OBJECTS = main.o file_loader.o decompress.o
 
 main: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
@@ -9,4 +9,4 @@ main: $(OBJECTS)
 clean:
 	rm *.o main
 
-$(OBJECTS): functions.h
+$(OBJECTS): functions.h structs.h

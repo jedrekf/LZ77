@@ -1,18 +1,44 @@
 #include "functions.h"
 #include <iostream>
 
-void print_usage(char* argv[]);
 
 int main(int argc, char* argv[]){
+	// uncomment below 3 lines to use arguments
+	// auto args = get_args(argc, argv);
+	// std::string str = load_from_file(std::get<0>(args));
+	// std::cout << "Input is: " << str << "\n";
+
+	std::vector<Triple> encoded;
+	encoded.push_back(Triple{0,0,'a'});
+	encoded.push_back(Triple{0,2,'b'});
+	encoded.push_back(Triple{3,1,'c'});
+	encoded.push_back(Triple{0,3,'c'});
+	encoded.push_back(Triple{0,0,'d'});
+	encoded.push_back(Triple{3,2,'c'});
+	std::cout << "Encoded string is: aabbcabbcdddc" << '\n';
+
+	auto decompressed_str = decompress(encoded);
+
+	std::cout << "Decoded string is: " <<  decompressed_str << '\n';
+
+	return 0;
+}
+
+void print_usage(char* argv[]){
+	std::cerr << "Usage: first arg: " << " Path to the file." << std::endl;
+	std::cerr << "Usage: second arg: " << " Selected behaviour 'compress' or 'decompress'. Default 'compress'." << std::endl;
+}
+
+std::tuple<std::string, bool> get_args(int argc, char* argv[]){
 	if(argc < 2 || argc > 3){
 		print_usage(argv);
-		return -1;
+		exit(-1);
 	}
 	bool compress = true;
 
 	if(argc == 3 && (argv[2] != "decompress" || argv[2] != "compress")){
 		print_usage(argv);
-		return -1;
+		exit(-1);
 	}else{
 		if(argv[1] == "decompress"){
 			std::cout << "Decompressing " << argv[1] << "\n";
@@ -23,16 +49,5 @@ int main(int argc, char* argv[]){
 	}
 	auto file_path = argv[1];
 
-	
-
-
-	std::string str = load_from_file(file_path);
-	std::cout << "Input is: " << str << "\n";
-
-	return 0;
-}
-
-void print_usage(char* argv[]){
-	std::cerr << "Usage: first arg: " << " Path to the file." << std::endl;
-	std::cerr << "Usage: second arg: " << " Selected behaviour 'compress' or 'decompress'. Default 'compress'." << std::endl;
+	return std::make_tuple(file_path, compress);
 }
