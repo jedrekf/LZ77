@@ -7,7 +7,7 @@ std::string decompress(std::vector<Triple> coded) {
     // initialize dictionary part of window with the first symbol
     init_dictionary(window, coded.at(0).S);
 
-    int pos = 0;
+    int pos = 1;
     int curr_dict_len = 1;
     for(int i = 1; i < coded.size(); i++){
         // for each triple check how far to go back in the sequence
