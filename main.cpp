@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
 	// std::string str = load_from_file(std::get<0>(args));
 	// std::cout << "Input is: " << str << "\n";
 
-	auto data = "aabbcabbcdddc";
+	auto data = "aabbbbbbcabbcdddc";
 	std::cout << "Encoding string : "<< data <<std::endl;
 	auto result = get_compressed_data(data);
 	for(int i=0; i<result.size(); i++)

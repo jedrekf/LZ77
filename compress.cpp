@@ -1,4 +1,4 @@
-#include<string.h>
+#include <string.h>
 #include "functions.h"
 #include <iostream>
 #include <vector>
@@ -20,6 +20,7 @@ vector<Triple> get_compressed_data(string input)
 		int tcnd = 0;
 		int j = 0;
 		int k = 0;
+		bool last_matched = false;
 		while(j < window.length() && i+k < input.length())
 		{
 			if( k >= tpos)
@@ -49,6 +50,7 @@ vector<Triple> get_compressed_data(string input)
 					maxlen = k;
 					maxpos = j - k;
 				}
+				last_matched = true;
 			}
 			else
 			{
@@ -58,6 +60,28 @@ vector<Triple> get_compressed_data(string input)
 					j++;
 					k++;
 				}
+				last_matched = false;
+			}
+		}
+		int start = j-k;
+		int idx = 0;
+		int len = k;
+		while(last_matched && i+k+idx < input.length())
+		{
+			if(input[i+k+idx] == window[start+idx])
+			{
+				len++;
+				last_matched = true;
+				idx++;
+				if(len > maxlen)
+				{
+					maxlen = len;
+					maxpos = start;
+				}
+			}
+			else
+			{
+				last_matched = false;
 			}
 		}
 		if(maxlen == 0)
@@ -78,9 +102,4 @@ vector<Triple> get_compressed_data(string input)
 			window = input.substr(i-WINDOW_PARAMS.WINDOW_SIZE, WINDOW_PARAMS.WINDOW_SIZE);
 	}
 	return output;
-}
-
-void compress_input(string input, string path)
-{
-	
 }
