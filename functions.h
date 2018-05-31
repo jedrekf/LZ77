@@ -3,11 +3,8 @@
 #include <tuple>
 #include "structs.h"
 
-//prints usage info
-void print_usage(char* argv[]);
-
-//gets arguments from command line
-std::tuple<std::string, bool> get_args(int argc, char* argv[]);
+//save encoded 
+void save_encoded_to_file(std::vector<Triple> encoded, std::string path);
 
 // save string to file
 void save_to_file(std::string content, std::string path);
@@ -21,3 +18,7 @@ std::string decompress(std::vector<Triple> coded);
 std::vector<Triple> get_compressed_data(std::string input);
 
 void compress_input(std::string input, std::string path);
+
+std::tuple<std::string, std::string, bool> get_args(int argc, char* argv[]);
+
+std::vector<Triple> load_encoded_from_file(std::string path);

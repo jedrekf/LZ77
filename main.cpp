@@ -1,50 +1,62 @@
 #include "functions.h"
 #include <iostream>
+#include <ctime>
+#include <chrono>
 
 Window WINDOW_PARAMS = {4096, 2048, 2048};
 
-int main(int argc, char* argv[]){
-	// uncomment below 3 lines to use arguments
-	// auto args = get_args(argc, argv);
-	// std::string str = load_from_file(std::get<0>(args));
-	// std::cout << "Input is: " << str << "\n";
+int main(int argc, char* argv[]) {
+	auto args = get_args(argc, argv);
+	auto output_file_path = std::get<1>(args);
 
-	auto data = "aabbbbbbcabbcdddc";
-	std::cout << "Encoding string : "<< data <<std::endl;
-	auto result = get_compressed_data(data);
-	for(int i=0; i<result.size(); i++)
-		std::cout << result[i].P << ' ' << result[i].C << ' ' << result[i].S << std::endl;
+	bool compress = std::get<2>(args);
+	if(compress) {
+		auto data = load_from_file(std::get<0>(args));
 
-	auto decompressed_str = decompress(result);
-	std::cout << "Decoded string : " << decompressed_str << std::endl;
+		std::cout << "Encoding string : "<< data <<std::endl;
+		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+		auto result = get_compressed_data(data);
+		std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+		std::cout << "Compression took nanoseconds = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() <<std::endl;
+		
+		save_encoded_to_file(result, output_file_path);
+	} else {
+		auto data = load_encoded_from_file(std::get<0>(args));
+		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+		auto decompressed_str = decompress(data);
+		std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
+		std::cout << "Decompression took nanoseconds = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() <<std::endl;
+		std::cout << "Decoded string  : " << decompressed_str << std::endl;
+		save_to_file(decompressed_str, output_file_path);
+	}
 
 	return 0;	
 }
 
-void print_usage(char* argv[]){
+void print_usage(char* argv[]) {
 	std::cerr << "Usage: first arg: " << " Path to the file." << std::endl;
-	std::cerr << "Usage: second arg: " << " Selected behaviour 'compress' or 'decompress'. Default 'compress'." << std::endl;
+	std::cerr << "Usage: second arg: " << " Path to the output file. (it will be created or overwritten)" << std::endl;
+	std::cerr << "Usage: third arg: " << " Selected behaviour 'compress' or 'decompress'" << std::endl;
 }
 
-std::tuple<std::string, bool> get_args(int argc, char* argv[]){
-	if(argc < 2 || argc > 3){
+std::tuple<std::string, std::string, bool> get_args(int argc, char* argv[]) {
+	if(argc != 4) {
 		print_usage(argv);
 		exit(-1);
 	}
-	bool compress = true;
+	std::string purpose = argv[3];
+	bool compress;
+	if(purpose == "decompress") {
+		compress = false;
+	}
+	else if(purpose == "compress") {
+		compress = true;
+	} else {
+		print_usage(argv);
+		exit(-1);
+	}
 
-	if(argc == 3 && (argv[2] != "decompress" || argv[2] != "compress")){
-		print_usage(argv);
-		exit(-1);
-	}else{
-		if(argv[1] == "decompress"){
-			std::cout << "Decompressing " << argv[1] << "\n";
-			compress = false;
-		}else{
-			std::cout << "Compressing " << argv[1] << "\n";
-		}
-	}
 	auto file_path = argv[1];
-
-	return std::make_tuple(file_path, compress);
+	auto output_file_path = argv[2];
+	return std::make_tuple(file_path, output_file_path, compress);
 }
