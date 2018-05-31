@@ -9,20 +9,15 @@ int main(int argc, char* argv[]){
 	// std::string str = load_from_file(std::get<0>(args));
 	// std::cout << "Input is: " << str << "\n";
 
-	std::vector<Triple> encoded;
-	encoded.push_back(Triple{0,0,'a'});
-	encoded.push_back(Triple{0,0,'b'});
-	encoded.push_back(Triple{2,2,'c'});
-	
-	std::cout << "Encoded string is: ababc" << '\n';
-
-	auto decompressed_str = decompress(encoded);
-
-	std::cout << "Decoded string is: " <<  decompressed_str << '\n';
-	auto result = get_compressed_data("aabbcabbcdddc");
-	std::cout << "Encoding string : 'aabbcabbcdddc'"<<std::endl;
+	auto data = "aabbcabbcdddc";
+	std::cout << "Encoding string : "<< data <<std::endl;
+	auto result = get_compressed_data(data);
 	for(int i=0; i<result.size(); i++)
 		std::cout << result[i].P << ' ' << result[i].C << ' ' << result[i].S << std::endl;
+
+	auto decompressed_str = decompress(result);
+	std::cout << "Decoded string : " << decompressed_str << std::endl;
+
 	return 0;	
 }
 
