@@ -20,7 +20,7 @@ int main(int argc, char* argv[]){
 
 	std::cout << "Decoded string is: " <<  decompressed_str << '\n';
 	auto result = get_compressed_data("aabbcabbcdddc");
-	std::cout << 'Encoding string : "aabbcabbcdddc"'<<std::endl;
+	std::cout << "Encoding string : 'aabbcabbcdddc'"<<std::endl;
 	for(int i=0; i<result.size(); i++)
 		std::cout << result[i].P << ' ' << result[i].C << ' ' << result[i].S << std::endl;
 	return 0;	
