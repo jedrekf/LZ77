@@ -19,8 +19,8 @@ for fn in `ls -d -1 ./tests/input_files/*.*`; do
     file_len=$(wc -c <"$fn")
     echo "File length: "$file_len
     
-    temp_enc=fn"_enc"
-    temp_dec=fn"_dec"
+    temp_enc=$fn"_enc"
+    temp_dec=$fn"_dec"
     
     compression_time=`./main $fn $temp_enc "compress"`
     compression_result=$?

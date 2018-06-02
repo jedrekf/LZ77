@@ -9,28 +9,28 @@ int main(int argc, char* argv[]) {
 	auto args = get_args(argc, argv);
 	auto output_file_path = std::get<1>(args);
 	
-	int elapsed_time;
+	double elapsed_time;
 
 	bool compress = std::get<2>(args);
 	try{
 		if(compress) {
 			auto data = load_from_file(std::get<0>(args));
 
-			std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+			std::clock_t c_start = std::clock();
 			auto result = get_compressed_data(data);
-			std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-			elapsed_time = (int)std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count();
-			std::cout << elapsed_time <<std::endl;
+			std::clock_t c_end = std::clock();
+			elapsed_time = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+			std::cout << elapsed_time*1000000 << std::endl;
 
 			save_encoded_to_file(result, output_file_path);
 		} else {
 			auto data = load_encoded_from_file(std::get<0>(args));
 
-			std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+			std::clock_t c_start = std::clock();
 			auto decompressed_str = decompress(data);
-			std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-			elapsed_time = (int)std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count();
-			std::cout<< elapsed_time <<std::endl;
+			std::clock_t c_end = std::clock();
+			elapsed_time = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+			std::cout<< elapsed_time*1000000 <<std::endl;
 
 			save_to_file(decompressed_str, output_file_path);
 		}
@@ -64,7 +64,7 @@ std::tuple<std::string, std::string, bool> get_args(int argc, char* argv[]) {
 		print_usage(argv);
 		exit(-1);
 	}
-	
+
 	auto file_path = argv[1];
 	auto output_file_path = argv[2];
 	return std::make_tuple(file_path, output_file_path, compress);
