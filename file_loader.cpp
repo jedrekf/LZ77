@@ -52,6 +52,9 @@ std::vector<Triple> load_encoded_from_file(std::string path){
 	std::vector<Triple> triples;
 	std::vector<std::string> v;
 	while(std::getline(file, line)) {
+		if(line.empty() || line == " "){
+			break;
+		}
 		split(line, v, ' ');
 		// Triple triple = new Triple {
 		// 		std::stoi(v[0]),

@@ -10,24 +10,33 @@ echo ; echo ; echo ;
 #print variable on a screen
 echo "Launching tests for LZ77 algorithm..."
 
-declare -a results=()
-all_tests_passed=true
 
-for fn in `ls -d -1 ./tests/input_files/*.*`; do
+all_tests_passed=true
+TESTS_DIR="./tests/"
+FULL_TESTS_DIR=$TESTS_DIR"input_files/*.*"
+mkdir -p $TESTS_DIR"temp"
+
+declare -a results=()
+for fn in `ls -d -1 $FULL_TESTS_DIR`; do
+    temp_file=$TESTS_DIR"temp/"`echo $fn | cut -f4 -d"/"`
+    echo "some shit:  "$temp_file
+
+    test_passed=true
     echo
     echo "running test: "$fn
     file_len=$(wc -c <"$fn")
     echo "File length: "$file_len
     
-    temp_enc=$fn"_enc"
-    temp_dec=$fn"_dec"
+    temp_enc=$temp_file"_enc"
+    temp_dec=$temp_file"_dec"
     
     compression_time=`./main $fn $temp_enc "compress"`
     compression_result=$?
     if [ $compression_result -ne 0 ]
     then
-        echo "${RED}ERROR:${NC} file not successfuly encoded: $fn"
+        echo "${RED}ERROR:${NC} failed compression on: $fn"
         all_tests_passed=false
+        test_passed=false
     else
         echo "compression time: "$compression_time
         results+=($compression_time)
@@ -37,8 +46,9 @@ for fn in `ls -d -1 ./tests/input_files/*.*`; do
     decompression_result=$?
     if [ $decompression_result -ne 0 ]
     then
-        echo -e "${RED}ERROR:${NC} file not successfuly decoded: $fn"
+        echo -e "${RED}ERROR:${NC} failed decompression on: $fn"
         all_tests_passed=false
+        test_passed=false
     else
         echo "Decompression time: "$decompression_time
         results+=($decompression_time)
@@ -50,9 +60,12 @@ for fn in `ls -d -1 ./tests/input_files/*.*`; do
     then
         echo -e "${RED}ERROR:${NC} Decoded file is not the same as the input file $fn. Something went wrong. :("
         all_tests_passed=false
+        test_passed=false
     fi
 
-    `rm $temp_enc $temp_dec`
+    if $test_passed; then
+        `rm $temp_enc $temp_dec`
+    fi
 done
 
 echo
