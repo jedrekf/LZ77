@@ -92,7 +92,7 @@ vector<Triple> get_compressed_data(string input)
 		}
 		else
 		{
-			Triple to_add = {i-maxpos,maxlen,input[i+maxlen]};
+			Triple to_add = {window.size()-maxpos,maxlen,input[i+maxlen]};
 			output.push_back(to_add);
 			i = i + maxlen + 1;	
 		}
