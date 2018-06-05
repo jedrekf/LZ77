@@ -43,9 +43,9 @@ std::string decompress(std::vector<Triple> coded) {
         }
 
         auto next_char = coded[i].S;
-        if(next_char == '~'){
-            //its newline
-            next_char = '\n';
+        if(next_char == '\000'){
+            //its EOF
+            break;
         }
         window[head] = coded[i].S;
         head++;

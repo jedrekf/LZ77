@@ -11,8 +11,6 @@ std::string load_from_file(std::string path) {
 	auto str = std::string((std::istreambuf_iterator<char>(in)),
 		std::istreambuf_iterator<char>());
 	
-	//str.replace(str.begin(), str.end(), "\r\n", "~");
-
 	return str;
 }
 
@@ -20,7 +18,7 @@ void save_encoded_to_file(std::vector<Triple> encoded, std::string path){
 	auto out = std::ofstream(path);
 
 	for(int i = 0; i < encoded.size(); i++) {
-		out << encoded[i].P << ' ' << encoded[i].C << ' ' << encoded[i].S << std::endl;
+		out << encoded[i].P << ' ' << encoded[i].C << ' ' << encoded[i].S << '|';
 	}
 	out.flush();
 	out.close();
@@ -53,7 +51,7 @@ std::vector<Triple> load_encoded_from_file(std::string path){
 	std::string line;
 	std::vector<Triple> triples;
 	std::vector<std::string> v;
-	while(std::getline(file, line)) {
+	while(std::getline(file, line, '|')) {
 		if(line.empty() || line == " "){
 			break;
 		}
@@ -63,10 +61,6 @@ std::vector<Triple> load_encoded_from_file(std::string path){
 				std::stoi(v[1]),
 				v[2][0] 
 			};
-
-		if(triple.S == '\000'){
-			triple.S = '\0';
-		}
 
 		triples.push_back(triple);
 	}
