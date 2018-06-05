@@ -1,7 +1,7 @@
 #!/bin/bash
 
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+RED="\033[0;31m"
+NC="\033[0m" # No Color
 
 echo "rebuilding project..."
 make
@@ -19,9 +19,9 @@ mkdir -p $TESTS_DIR"temp"
 declare -a results=()
 for fn in `ls -d -1 $FULL_TESTS_DIR`; do
     temp_file=$TESTS_DIR"temp/"`echo $fn | cut -f4 -d"/"`
-    echo "some shit:  "$temp_file
 
     test_passed=true
+    echo
     echo
     echo "running test: "$fn
     file_len=$(wc -c <"$fn")
@@ -34,7 +34,7 @@ for fn in `ls -d -1 $FULL_TESTS_DIR`; do
     compression_result=$?
     if [ $compression_result -ne 0 ]
     then
-        echo "${RED}ERROR:${NC} failed compression on: $fn"
+        echo -e "${RED}ERROR:${NC} failed compression on: $fn"
         all_tests_passed=false
         test_passed=false
     else

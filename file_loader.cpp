@@ -11,6 +11,8 @@ std::string load_from_file(std::string path) {
 	auto str = std::string((std::istreambuf_iterator<char>(in)),
 		std::istreambuf_iterator<char>());
 	
+	//str.replace(str.begin(), str.end(), "\r\n", "~");
+
 	return str;
 }
 
@@ -56,17 +58,17 @@ std::vector<Triple> load_encoded_from_file(std::string path){
 			break;
 		}
 		split(line, v, ' ');
-		// Triple triple = new Triple {
-		// 		std::stoi(v[0]),
-		// 		std::stoi(v[1]),
-		// 		v[2][0] 
-		// 	};
-
-		triples.push_back({
+		Triple triple = Triple {
 				std::stoi(v[0]),
 				std::stoi(v[1]),
 				v[2][0] 
-			});
+			};
+
+		if(triple.S == '\000'){
+			triple.S = '\0';
+		}
+
+		triples.push_back(triple);
 	}
 	return triples;
 }
