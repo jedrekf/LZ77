@@ -25,7 +25,6 @@ int main(int argc, char* argv[]) {
 			save_encoded_to_file(result, output_file_path);
 		} else {
 			auto data = load_encoded_from_file(std::get<0>(args));
-
 			std::clock_t c_start = std::clock();
 			auto decompressed_str = decompress(data);
 			std::clock_t c_end = std::clock();

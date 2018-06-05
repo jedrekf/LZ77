@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <sstream>
+#include <iostream>
 
 void init_dictionary(char* window, char c);
 
@@ -15,42 +16,46 @@ std::string decompress(std::vector<Triple> coded) {
     char window [WINDOW_PARAMS.WINDOW_SIZE];
     std::stringstream outputss;
     
-    init_dictionary(window, coded[0].S);
+    init_dictionary(window, coded.at(0).S);
 
     int head = 1;
-    for(int i = 1; i < coded.size(); i++){
-        
-        int dict_pos = head - coded[i].P;
+    int dict_pos;
+    for (std::vector<Triple>::iterator it = std::next(coded.begin()) ; it != coded.end(); ++it){
+    //for(int i = 1; i < coded.size(); i++){
+        Triple triple = *it;
+        dict_pos = head - triple.P;
         if(dict_pos < 0){
             // if we have to go back before the first character in window we wrap to window end
             dict_pos = WINDOW_PARAMS.WINDOW_SIZE + dict_pos;
         }
 
         //copy
-        for(int d_i = 0; d_i < coded[i].C ; d_i++ ){
-            //making a window array act circular
-            if(head == WINDOW_PARAMS.WINDOW_SIZE){
-                outputss << std::string(&window[0], head); 
-                head = 0;
-            }
-            if(dict_pos == WINDOW_PARAMS.WINDOW_SIZE){
-                dict_pos = 0;
-            }
-
+        for(int d_i = 0; d_i < triple.C ; d_i++ ){
             window[head] = window[dict_pos];
             head++;
             dict_pos++;
+            //making a window array act circular
+            if(head >= WINDOW_PARAMS.WINDOW_SIZE){
+                outputss << std::string(&window[0], head); 
+                head = 0;
+            }
+            if(dict_pos >= WINDOW_PARAMS.WINDOW_SIZE){
+                dict_pos = 0;
+            }
         }
 
-        auto next_char = coded[i].S;
-        if(next_char == '\000'){
+        if(triple.S == '\000'){
             //its EOF
             break;
         }
-        window[head] = coded[i].S;
+        window[head] = triple.S;
         head++;
+        if(head >= WINDOW_PARAMS.WINDOW_SIZE){
+            outputss << std::string(&window[0], head); 
+            head = 0;
+        }
     }
-
+    
     outputss << std::string(&window[0], head); 
     return outputss.str();
 }
