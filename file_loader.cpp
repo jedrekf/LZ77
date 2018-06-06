@@ -18,7 +18,7 @@ void save_encoded_to_file(std::vector<Triple> encoded, std::string path){
 	auto out = std::ofstream(path);
 
 	for(int i = 0; i < encoded.size(); i++) {
-		out << encoded[i].P << '~' << encoded[i].C << '~' << encoded[i].S << '|';
+		out << encoded[i].P << '\037' << encoded[i].C << '\037' << encoded[i].S << '\035';
 	}
 	out.flush();
 	out.close();
@@ -51,8 +51,8 @@ std::vector<Triple> load_encoded_from_file(std::string path){
 	std::string line;
 	std::vector<Triple> triples;
 	std::vector<std::string> v;
-	while(std::getline(file, line, '|')) {
-		split(line, v, '~');
+	while(std::getline(file, line, '\035')) {
+		split(line, v, '\037');
 		Triple triple = Triple {
 				std::stoi(v[0]),
 				std::stoi(v[1]),

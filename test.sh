@@ -44,6 +44,7 @@ for fn in `ls -d -1 $FULL_TESTS_DIR`; do
     else
         echo "compression time: "$compression_time
         results+=($compression_time)
+        echo "Compressed file length: "$compressed_file_len
     fi
 
     decompression_time=`./main $temp_enc $temp_dec "decompress"`
@@ -79,7 +80,7 @@ echo
 
 if $all_tests_passed;then
     #save results to csv file
-    echo "file, compression, decompression, input_len_B, compressed_len_B" > test_results.csv
+    echo "file, compression in miliseconds, decompression in miliseconds, file length in Bajts, compressed file length in Bajts" > test_results.csv
     i=1
     for result in "${results[@]}"; do
         if [ $(($i%5)) -eq 0 ]; then
