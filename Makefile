@@ -1,12 +1,8 @@
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall -g
+win:
+	make -f Makefile.win
 
-OBJECTS = main.o file_loader.o decompress.o compress.o
-
-main: $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+nix:
+	make -f Makefile.nix
 
 clean:
 	rm *.o main
-
-$(OBJECTS): functions.h structs.h
