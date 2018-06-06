@@ -1,0 +1,48 @@
+---
+title: "Raport z Testów"
+author: "Piotr Luboń, Jędrzej Fijałkowski"
+date: "June 6, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+data <- read.csv('test_results.csv', header = TRUE, row.names = NULL)
+data <- data[,1:6]
+data$decompression.in.miliseconds <- floor((data$decompression.in.miliseconds * data$file)/10)
+data$row.names <-unlist(lapply(strsplit(data[,1],'/'), function(x)
+{
+  return(x[length(x)])
+}))
+opisy <- c('Treść ksiązki "Hobbit, czyli tam i z powrotem" w języku angielskim.',
+           'Treść inwokacji z "Pana Tadeusza".',
+           'Losowy ciąg znaków.',
+           'Tekst składający się z łacińskich i quasi-łacińskich wyrazów tosowany do demonstracji krojów pisma, kompozycji kolumny     itp.',
+           'Kod źródłowy strony MINI PW.',
+           'Losowy ciąg znaków.',
+           'Rozszerzenie liczby pi w postaci binarnej.',
+           'Rozszerzenie liczby pi w postaci dziesiętnej.',
+           'Powtarzający się alfabet łaciński.',
+           'Kod źródłowy witryny youtube.com.')
+```
+
+#Opis testów
+
+Testy przeprowadzono dla 10 plików wejściowych. Dla każdego pliku program został uruchomiony dla pierwszych 10%, 20%, ... 100% pliku. Zostały obliczone czasy kompresji i dekompresji. Wyniki zostały przedstawione na wykresach.
+\pagebreak
+```{r, echo=FALSE, results='asis', fig.keep='all'}
+filenames <- sort(unique(data$row.names))
+for(i in 1:10)
+{
+  cat(paste('\n\n## ', filenames[i], '\n\n'))
+  cat(paste(opisy[i], '\n\n'))
+  subset <- data[data$row.names==filenames[i], ]
+  plot(subset$file, subset$file.part.indicator, type = 'l', xlab = 'Rozmiar pliku', ylab='Czas w milisekundach', main='Czas kompresji')
+  plot(subset$file, subset$compression.in.miliseconds, type='l', xlab = 'Rozmiar pliku', ylab='Czas w milisekundach', main='Czas dekompresji')
+  cat('\\pagebreak')
+}
+```
+
+#Wnioski
+Na wykres widać wyraźnie, że czas biegu algorytmu rośnie liniowo wraz z podawanie coraz większej częsci pliku na wejściu. Zatem algorytm spełnia zakładaną złożoność obliczeniową.
+
