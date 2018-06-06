@@ -19,19 +19,23 @@ mkdir -p $TESTS_DIR"temp"
 declare -a results=()
 for fn in `ls -d -1 $FULL_TESTS_DIR`; do
     temp_file=$TESTS_DIR"temp/"`echo $fn | cut -f4 -d"/"`
+    results+=($temp_file)
 
     test_passed=true
     echo
     echo
     echo "running test: "$fn
-    file_len=$(wc -c <"$fn")
-    echo "File length: "$file_len
+    input_file_len=$(wc -c <"$fn")
+    echo "File length: "$input_file_len
     
     temp_enc=$temp_file"_enc"
     temp_dec=$temp_file"_dec"
     
     compression_time=`./main $fn $temp_enc "compress"`
     compression_result=$?
+
+    compressed_file_len=$(wc -c <"$temp_enc")
+
     if [ $compression_result -ne 0 ]
     then
         echo -e "${RED}ERROR:${NC} failed compression on: $fn"
@@ -63,6 +67,9 @@ for fn in `ls -d -1 $FULL_TESTS_DIR`; do
         test_passed=false
     fi
 
+    results+=($input_file_len)
+    results+=($compressed_file_len)
+
     if $test_passed; then
         `rm $temp_enc $temp_dec`
     fi
@@ -72,13 +79,13 @@ echo
 
 if $all_tests_passed;then
     #save results to csv file
-    echo "compression, decompression" > test_results.csv
-    i=0
+    echo "file, compression, decompression, input_len_B, compressed_len_B" > test_results.csv
+    i=1
     for result in "${results[@]}"; do
-        if [ $(($i%2)) -eq 0 ]; then
-            echo -n "$result," >> test_results.csv
-        else
+        if [ $(($i%5)) -eq 0 ]; then
             echo "$result," >> test_results.csv
+        else
+            echo -n "$result," >> test_results.csv
         fi
         i=$((i+1))
     done
